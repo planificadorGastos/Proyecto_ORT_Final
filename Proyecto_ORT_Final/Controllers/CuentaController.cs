@@ -16,7 +16,6 @@ namespace Proyecto_ORT_Final.Controllers
 
         {
 
-
             return View(db.Cuentas.ToList());
         }
 
