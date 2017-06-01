@@ -1,2 +1,2 @@
-# Proyecto_ORT_Final
+# Proyecto ORT
 Proyecto final de carrera.
