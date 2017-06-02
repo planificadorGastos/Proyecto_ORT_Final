@@ -44,6 +44,7 @@ namespace Proyecto_ORT_Final.Controllers
                           where c.Usuario.Mail == userLogueado.Mail
                           select c;
 
+
             var list = new SelectList(cuentas, "Id", "Nombre");
             ViewData["cuentas"] = list;
             return View();
@@ -54,10 +55,11 @@ namespace Proyecto_ORT_Final.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,fecha,descripcion,monto,pago")] Gasto gasto,int cuentas)
+        public ActionResult Create([Bind(Include = "Id,fecha,descripcion,monto,pago")] Gasto gasto,int cuentas,HttpPostedFileBase imagen)
         {
             if (ModelState.IsValid)
             {
+                
                 var userLogueado = (Usuario)Session["user"];
 
                 var usuario = from u in db.Usuarios
@@ -68,8 +70,19 @@ namespace Proyecto_ORT_Final.Controllers
                              where c.Id == cuentas
                              select c;
 
-                gasto.cuenta = cuenta.First();
+                Cuenta Cuenta = cuenta.First();
+
+                gasto.cuenta = Cuenta;
                 gasto.Usuario = usuario.First();
+                if (imagen != null)
+                {
+                  gasto.Imagen = new byte[imagen.ContentLength];
+                
+                imagen.InputStream.Read(gasto.Imagen, 0, imagen.ContentLength);
+
+                }
+             
+                Cuenta.SaldoRestante = Cuenta.SaldoRestante - gasto.monto;
                 db.Gastos.Add(gasto);
                 db.SaveChanges();
                 return RedirectToAction("Index","HojaRuta");
@@ -104,7 +117,7 @@ namespace Proyecto_ORT_Final.Controllers
             {
                 db.Entry(gasto).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","HojaRuta");
             }
             return View(gasto);
         }
@@ -132,7 +145,7 @@ namespace Proyecto_ORT_Final.Controllers
             Gasto gasto = db.Gastos.Find(id);
             db.Gastos.Remove(gasto);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","HojaRuta");
         }
 
         protected override void Dispose(bool disposing)

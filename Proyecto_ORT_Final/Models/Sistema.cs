@@ -45,6 +45,7 @@ namespace Proyecto_ORT_Final.Models
 
         public HojaDeRuta getHojaDeRuta()
         {
+
             HojaDeRuta retorno = new HojaDeRuta();
             retorno.ingresos = this.getIngresos();
             retorno.gastos = this.getGastos();
@@ -66,11 +67,21 @@ namespace Proyecto_ORT_Final.Models
 
         private List<Ingreso> getIngresos()
         {
+            if (verificarLogin(HttpContext.Current.Session["user"]))
+            {
+
+            
+
             var userLogueado = (Usuario)HttpContext.Current.Session["user"];
             var ingresos = from i in db.Ingresos
                            where i.Usuario.Id == userLogueado.Id
                            select i;
             return ingresos.ToList();
+            }
+            else
+            {
+                return new List<Ingreso>();
+            }
         }
 
         private List<Gasto> getGastos()
@@ -99,5 +110,14 @@ namespace Proyecto_ORT_Final.Models
             }
             return retorno;
         }
+
+        public bool verificarLogin(Object user)
+        {
+            if (user != null) return true;
+            else return false;
+        }
+
+      
+
     }
 }

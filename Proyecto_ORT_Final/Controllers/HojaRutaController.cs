@@ -16,9 +16,16 @@ namespace Proyecto_ORT_Final.Controllers
         // GET: HojaRuta
         public ActionResult Index()
         {
-            
-            var HojaRuta = sistema.getHojaDeRuta();
+            if (Session["user"] != null)
+            {
+ var HojaRuta = sistema.getHojaDeRuta();
             return View(HojaRuta);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+           
         }
 
         public ActionResult Actualizar(int id)
