@@ -14,7 +14,7 @@ namespace Proyecto_ORT_Final.Controllers
     {
         private ProyectoContext db = new ProyectoContext();
 
-        // GET: Cuenta
+        // GET: Cuenta mod
         public ActionResult Index()
         {
             return View(db.Cuentas.ToList());
