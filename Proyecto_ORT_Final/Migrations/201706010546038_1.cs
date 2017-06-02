@@ -3,7 +3,7 @@ namespace Proyecto_ORT_Final.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class _8 : DbMigration
+    public partial class _1 : DbMigration
     {
         public override void Up()
         {
@@ -14,6 +14,7 @@ namespace Proyecto_ORT_Final.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         Nombre = c.String(),
                         SaldoInicial = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        SaldoRestante = c.Decimal(nullable: false, precision: 18, scale: 2),
                         TipoMoneda = c.String(),
                         Usuario_Id = c.Int(),
                     })
@@ -39,6 +40,7 @@ namespace Proyecto_ORT_Final.Migrations
                         descripcion = c.String(),
                         monto = c.Decimal(nullable: false, precision: 18, scale: 2),
                         pago = c.Boolean(nullable: false),
+                        Imagen = c.Binary(),
                         cuenta_Id = c.Int(),
                         mapa_Id = c.Int(),
                         Usuario_Id = c.Int(),

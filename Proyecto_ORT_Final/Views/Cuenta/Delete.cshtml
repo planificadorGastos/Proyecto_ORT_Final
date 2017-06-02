@@ -1,0 +1,56 @@
+﻿@model Proyecto_ORT_Final.Models.Cuenta
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Eliminar</h2>
+
+<h3>Desea eliminar la cuenta?</h3>
+<div>
+    <h4>Cuenta</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaldoInicial)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaldoInicial)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaldoRestante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaldoRestante)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoMoneda)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoMoneda)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Eliminar" class="btn btn-default" /> |
+            @Html.ActionLink("Volver", "Index","HojaRuta")
+        </div>
+    }
+</div>

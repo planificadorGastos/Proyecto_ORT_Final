@@ -421,7 +421,7 @@ namespace Proyecto_ORT_Final.Controllers
         {
             Session["user"] = null;
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

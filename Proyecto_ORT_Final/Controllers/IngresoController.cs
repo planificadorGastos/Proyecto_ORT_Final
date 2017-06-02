@@ -67,12 +67,14 @@ namespace Proyecto_ORT_Final.Controllers
                               select u;
 
                 var cuenta = from c in db.Cuentas
-                              where c.Id == cuentas
+                             where c.Id == cuentas
                              select c;
 
+                Cuenta Cuenta = cuenta.First();
                 ingreso.cuenta = cuenta.First();
                 ingreso.Usuario = usuario.First();
                 ingreso.cuenta.Id = cuentas;
+                Cuenta.SaldoRestante = Cuenta.SaldoRestante + ingreso.Monto;
                 db.Ingresos.Add(ingreso);
                 db.SaveChanges();
                 return RedirectToAction("Index","HojaRuta");
@@ -107,7 +109,8 @@ namespace Proyecto_ORT_Final.Controllers
             {
                 db.Entry(ingreso).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "HojaRuta");
+
             }
             return View(ingreso);
         }
@@ -135,7 +138,8 @@ namespace Proyecto_ORT_Final.Controllers
             Ingreso ingreso = db.Ingresos.Find(id);
             db.Ingresos.Remove(ingreso);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "HojaRuta");
+
         }
 
         protected override void Dispose(bool disposing)
