@@ -14,9 +14,10 @@ namespace Proyecto_ORT_Final.Models
         [Display(Name = "Descripción")]
         public String Descripcion { get; set; }
         public Cuenta cuenta { get; set; }
-        public Usuario Usuario { get; set; }
+        
         [Display(Name = "Fecha")]
         [DataType(DataType.Date)]
         public DateTime Fecha { get; set; }
+        public Usuario Usuario { get; set; }
     }
 }

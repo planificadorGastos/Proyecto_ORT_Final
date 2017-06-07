@@ -14,7 +14,7 @@ namespace Proyecto_ORT_Final.Models
         public DbSet<Ingreso> Ingresos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
-        // public DbSet<HojaDeRuta> HojaDeRutas { get; set; }
+        public DbSet<Objetivo> Objetivos { get; set; }
 
         public ProyectoContext()
             : base("con") {

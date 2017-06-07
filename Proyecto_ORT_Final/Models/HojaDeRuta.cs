@@ -8,78 +8,15 @@ namespace Proyecto_ORT_Final.Models
     public class HojaDeRuta
     {
         public int Id { get; set; }
-        public List<Objetivo> objetivos { get; set; }
-        public Usuario usuario { get; set; }
-        public List<Ingreso> ingresos { get; set; }
-        public List<Gasto> gastos { get; set; }
-
-        public Usuario Usuario
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        public Ingreso Ingreso
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        public Gasto Gasto
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        public Objetivo Objetivo
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        public Cuenta Cuenta
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
+        
+        
         private ProyectoContext db = new ProyectoContext();
-
+        public List<Notificacion> Notificaciones { get; set; }
 
         public decimal getTotalPago()
     {
             decimal retorno=0;
-            foreach(Gasto g in gastos)
+            foreach(Gasto g in Sistema.instancia.getGastos())
             {
                 if (g.pago)
                 {
@@ -92,7 +29,7 @@ namespace Proyecto_ORT_Final.Models
         public decimal getTotalPendiente()
         {
             decimal retorno = 0;
-            foreach (Gasto g in gastos)
+            foreach (Gasto g in Sistema.instancia.getGastos())
             {
                 if (!g.pago)
                 {
@@ -105,7 +42,7 @@ namespace Proyecto_ORT_Final.Models
         public List<Gasto>  getGastosPagos()
         {
             List<Gasto> retorno = new List<Gasto>();
-            foreach (Gasto g in gastos)
+            foreach (Gasto g in Sistema.instancia.getGastos())
             {
                 if (g.pago)
                 {
@@ -118,7 +55,7 @@ namespace Proyecto_ORT_Final.Models
         public List<Gasto> getGastosNoPagos()
         {
             List<Gasto> retorno = new List<Gasto>();
-            foreach (Gasto g in gastos)
+            foreach (Gasto g in Sistema.instancia.getGastos())
             {
                 if (!g.pago)
                 {
@@ -130,7 +67,7 @@ namespace Proyecto_ORT_Final.Models
 
         public void actualizarGasto(int id)
         {
-            foreach (Gasto g in gastos)
+            foreach (Gasto g in Sistema.instancia.getGastos())
             {
                 if (!g.pago && g.Id== id)
                 {
@@ -139,14 +76,22 @@ namespace Proyecto_ORT_Final.Models
             }
         }
 
+
+       
+
+
+      public List<Objetivo> getObjetivos()
+        {
+            return Sistema.instancia.getObjetivos();
+        }
+
+
         public List<Cuenta> getCuentas()
         {
-            var userLogueado = (Usuario)HttpContext.Current.Session["user"];
-            var cuentas = from c in db.Cuentas
-                           where c.Usuario.Mail == userLogueado.Mail
-                           select c;
-            return cuentas.ToList();
+            return Sistema.instancia.getCuentas();
         }
+
+
 
     }
 

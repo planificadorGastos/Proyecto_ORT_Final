@@ -21,10 +21,11 @@ namespace Proyecto_ORT_Final.Models
         [Display(Name = "¿Pago?")]
         public Boolean pago { get; set; }
         public Cuenta cuenta { get; set; }
-        public Usuario Usuario { get; set; }
-
+        
         [Display(Name = "Imágen")]
         public Byte[] Imagen { get; set; }
+
+        public Usuario Usuario { get; set; }
 
     }
 }

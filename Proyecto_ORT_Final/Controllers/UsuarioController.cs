@@ -10,133 +10,109 @@ using Proyecto_ORT_Final.Models;
 
 namespace Proyecto_ORT_Final.Controllers
 {
-    public class IngresoController : Controller
+    public class UsuarioController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
 
-        // GET: Ingreso
+        // GET: Usuario
         public ActionResult Index()
         {
-            return View(db.Ingresos.ToList());
+            return View(db.Usuarios.ToList());
         }
 
-        // GET: Ingreso/Details/5
+        // GET: Usuario/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ingreso ingreso = db.Ingresos.Find(id);
-            if (ingreso == null)
+            Usuario usuario = db.Usuarios.Find(id);
+            if (usuario == null)
             {
                 return HttpNotFound();
             }
-            return View(ingreso);
+            return View(usuario);
         }
 
-        // GET: Ingreso/Create
+        // GET: Usuario/Create
         public ActionResult Create()
         {
-
-            var userLogueado = (Usuario)Session["user"];
-
-           
-            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
-            ViewData["cuentas"] = list;
-
             return View();
         }
 
-        // POST: Ingreso/Create
+        // POST: Usuario/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Ingreso ingreso, int cuentas)
+        public ActionResult Create([Bind(Include = "Id,Mail")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                var userLogueado = (Usuario)Session["user"];
-
-                var usuario = from u in db.Usuarios
-                              where u.Mail == userLogueado.Mail
-                              select u;
-
-                var cuenta = from c in db.Cuentas
-                             where c.Id == cuentas
-                             select c;
-
-                Cuenta Cuenta = cuenta.First();
-                ingreso.cuenta = cuenta.First();
-                ingreso.cuenta.Id = cuentas;
-                ingreso.Usuario = usuario.First();
-                Cuenta.SaldoRestante = Cuenta.SaldoRestante + ingreso.Monto;
-                db.Ingresos.Add(ingreso);
+                db.Usuarios.Add(usuario);
                 db.SaveChanges();
-                return RedirectToAction("Index","HojaRuta");
+                return RedirectToAction("Index");
             }
 
-            return View(ingreso);
+            return View(usuario);
         }
 
-        // GET: Ingreso/Edit/5
+        // GET: Usuario/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ingreso ingreso = db.Ingresos.Find(id);
-            if (ingreso == null)
+            Usuario usuario = db.Usuarios.Find(id);
+            if (usuario == null)
             {
                 return HttpNotFound();
             }
-            return View(ingreso);
+            return View(usuario);
         }
 
-        // POST: Ingreso/Edit/5
+        // POST: Usuario/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id")] Ingreso ingreso)
+        public ActionResult Edit([Bind(Include = "Id,Mail")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ingreso).State = EntityState.Modified;
+                db.Entry(usuario).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", "HojaRuta");
-
+                return RedirectToAction("Index");
             }
-            return View(ingreso);
+            return View(usuario);
         }
 
-        // GET: Ingreso/Delete/5
+        // GET: Usuario/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ingreso ingreso = db.Ingresos.Find(id);
-            if (ingreso == null)
+            Usuario usuario = db.Usuarios.Find(id);
+            if (usuario == null)
             {
                 return HttpNotFound();
             }
-            return View(ingreso);
+            return View(usuario);
         }
 
-        // POST: Ingreso/Delete/5
+        // POST: Usuario/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Ingreso ingreso = db.Ingresos.Find(id);
-            db.Ingresos.Remove(ingreso);
+            Usuario usuario = db.Usuarios.Find(id);
+            db.Usuarios.Remove(usuario);
             db.SaveChanges();
-            return RedirectToAction("Index", "HojaRuta");
-
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

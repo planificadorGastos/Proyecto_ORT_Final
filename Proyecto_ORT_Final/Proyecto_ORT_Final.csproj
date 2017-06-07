@@ -202,12 +202,18 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngresoController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ObjetivoController.cs" />
+    <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706010546038_1.cs" />
-    <Compile Include="Migrations\201706010546038_1.Designer.cs">
-      <DependentUpon>201706010546038_1.cs</DependentUpon>
+    <Compile Include="Migrations\201706061807069_m1.cs" />
+    <Compile Include="Migrations\201706061807069_m1.Designer.cs">
+      <DependentUpon>201706061807069_m1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706071656170_m2.cs" />
+    <Compile Include="Migrations\201706071656170_m2.Designer.cs">
+      <DependentUpon>201706071656170_m2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -223,9 +229,9 @@
     <Compile Include="Models\ProyectoContext.cs" />
     <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\Reporte.cs" />
+    <Compile Include="Models\Rol.cs" />
     <Compile Include="Models\Sistema.cs" />
     <Compile Include="Models\Usuario.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -282,9 +288,6 @@
     <Content Include="Scripts\bootstrap-confirmation.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="ClassDiagram1.cd" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -294,9 +297,13 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <None Include="Properties\PublishProfiles\Perfil1.pubxml" />
+    <None Include="Properties\PublishProfiles\ProyectoORT - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\ProyectoORT - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1-vsdoc.js" />
+    <Content Include="Scripts\html5-qrcode.min.js" />
+    <Content Include="Scripts\instascan.min.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
@@ -304,6 +311,7 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.confirm.js" />
@@ -312,6 +320,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jsqrcode-combined.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -368,6 +377,16 @@
     <Content Include="Views\Cuenta\Delete.cshtml" />
     <Content Include="Views\Cuenta\Edit.cshtml" />
     <Content Include="Views\Cuenta\Details.cshtml" />
+    <Content Include="Views\Usuario\Create.cshtml" />
+    <Content Include="Views\Usuario\Delete.cshtml" />
+    <Content Include="Views\Usuario\Details.cshtml" />
+    <Content Include="Views\Usuario\Edit.cshtml" />
+    <Content Include="Views\Usuario\Index.cshtml" />
+    <Content Include="Views\Objetivo\Create.cshtml" />
+    <Content Include="Views\Objetivo\Delete.cshtml" />
+    <Content Include="Views\Objetivo\Details.cshtml" />
+    <Content Include="Views\Objetivo\Edit.cshtml" />
+    <Content Include="Views\Objetivo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -377,8 +396,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201706010546038_1.resx">
-      <DependentUpon>201706010546038_1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201706061807069_m1.resx">
+      <DependentUpon>201706061807069_m1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706071656170_m2.resx">
+      <DependentUpon>201706071656170_m2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

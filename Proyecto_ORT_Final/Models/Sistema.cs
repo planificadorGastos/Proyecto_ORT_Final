@@ -8,31 +8,9 @@ namespace Proyecto_ORT_Final.Models
     public class Sistema
     {
 
+        public static Sistema instancia = new Sistema();
         public List<Reporte> reportes { get; set; }
-
-        public HojaDeRuta HojaDeRuta
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
-
-        public Reporte Reporte
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-
-            set
-            {
-            }
-        }
+        public List<HojaDeRuta> HojaRutas { get; set; }
 
         //  public List<HojaDeRuta> HojasDeRuta { get; set; }
         private ProyectoContext db = new ProyectoContext();
@@ -45,38 +23,21 @@ namespace Proyecto_ORT_Final.Models
 
         public HojaDeRuta getHojaDeRuta()
         {
-
-            HojaDeRuta retorno = new HojaDeRuta();
-            retorno.ingresos = this.getIngresos();
-            retorno.gastos = this.getGastos();
-
-            //var hojaRuta = from p in db.HojaDeRutas
-            //               where p.usuario.Mail == u
-            //               select p;
-
-
-            //foreach (HojaDeRuta h in this.HojasDeRuta)
-            //{
-            //    if (h.usuario.Mail == u)
-            //    {
-            //        return h;
-            //    }
-            //}
-            return retorno;
+            return new  HojaDeRuta();
+           
         }
 
-        private List<Ingreso> getIngresos()
+        public List<Ingreso> getIngresos()
         {
-            if (verificarLogin(HttpContext.Current.Session["user"]))
+            var user = (Usuario)HttpContext.Current.Session["user"];
+            if (verificarLogin(user))
             {
+                var Ingresos = from c in db.Ingresos
+                             where c.Usuario.Id == user.Id
+                              select c;
+                
+                return Ingresos.ToList();
 
-            
-
-            var userLogueado = (Usuario)HttpContext.Current.Session["user"];
-            var ingresos = from i in db.Ingresos
-                           where i.Usuario.Id == userLogueado.Id
-                           select i;
-            return ingresos.ToList();
             }
             else
             {
@@ -84,31 +45,26 @@ namespace Proyecto_ORT_Final.Models
             }
         }
 
-        private List<Gasto> getGastos()
+        public List<Gasto> getGastos()
         {
-            var userLogueado = (Usuario)HttpContext.Current.Session["user"];
-            var gastos = from g in db.Gastos
-                         where g.Usuario.Id == userLogueado.Id
-                         select g;
-            return gastos.ToList();
+            var user = (Usuario)HttpContext.Current.Session["user"];
+            var Gastos = from c in db.Gastos
+                           where c.Usuario.Id == user.Id
+                           select c;
+
+            return Gastos.ToList();
         }
 
       
 
         public List<Cuenta> getCuentas()
         {
-            var userLogueado = (Usuario)HttpContext.Current.Session["user"];
-            List<Cuenta> retorno = new List<Cuenta>();
-            var query = from b in db.Cuentas
-                        where b.Usuario.Id == userLogueado.Id
-                        orderby b.SaldoInicial
-                        select b;
+            var user = (Usuario)HttpContext.Current.Session["user"];
+            var Cuentas = from c in db.Cuentas
+                         where c.Usuario.Id == user.Id
+                         select c;
 
-            foreach (var Cuenta in query)
-            {
-                retorno.Add(Cuenta);
-            }
-            return retorno;
+            return Cuentas.ToList();
         }
 
         public bool verificarLogin(Object user)
@@ -117,7 +73,35 @@ namespace Proyecto_ORT_Final.Models
             else return false;
         }
 
-      
+        public Cuenta getCuenta(int id)
+        {
+                 var cuenta = from c in db.Cuentas
+                     where c.Id == id
+                     select c;
+            return cuenta.First();
+        }
+
+        internal List<Objetivo> getObjetivos()
+        {
+            var user = (Usuario)HttpContext.Current.Session["user"];
+            var Objetivos = from c in db.Objetivos
+                          where c.Usuario.Id == user.Id
+                          select c;
+
+            return Objetivos.ToList();
+        }
+
+        public Usuario getUsuarioLogueado(String id)
+        {
+
+            var usr = from u in db.Usuarios
+                      where u.Mail == id
+                      select u;
+
+            return usr.First();
+        }
+
+
 
     }
 }

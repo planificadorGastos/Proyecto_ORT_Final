@@ -7,13 +7,13 @@ namespace Proyecto_ORT_Final.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class _1 : IMigrationMetadata
+    public sealed partial class m2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(_1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(m2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201706010546038_1"; }
+            get { return "201706071656170_m2"; }
         }
         
         string IMigrationMetadata.Source

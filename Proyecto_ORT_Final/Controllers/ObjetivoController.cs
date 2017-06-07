@@ -10,152 +10,114 @@ using Proyecto_ORT_Final.Models;
 
 namespace Proyecto_ORT_Final.Controllers
 {
-    public class CuentaController : Controller
+    public class ObjetivoController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
 
-        // GET: Cuenta mod
+        // GET: Objetivo
         public ActionResult Index()
         {
-            return View(db.Cuentas.ToList());
+            return View(db.Objetivos.ToList());
         }
 
-
-        // GET: Cuenta/Details/5
+        // GET: Objetivo/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cuenta cuenta = db.Cuentas.Find(id);
-            if (cuenta == null)
+            Objetivo objetivo = db.Objetivos.Find(id);
+            if (objetivo == null)
             {
                 return HttpNotFound();
             }
-            return View(cuenta);
+            return View(objetivo);
         }
 
+        // GET: Objetivo/Create
         public ActionResult Create()
         {
-            if (Session["user"] == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            
-            var userLogueado = (Usuario)Session["user"];
-            
-            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
-            ViewData["cuentas"] = list;
-
-
             return View();
         }
 
-        //
-        // POST: /Libro/Create
-
+        // POST: Objetivo/Create
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Cuenta cuenta)
+        public ActionResult Create([Bind(Include = "Id,Descripcion,Fecha,Monto")] Objetivo objetivo)
         {
             if (ModelState.IsValid)
             {
                 var userLogueado = (Usuario)Session["user"];
                 var usuario = from u in db.Usuarios
-                              where u.Id == userLogueado.Id
+                              where u.Mail == userLogueado.Mail
                               select u;
-
-                cuenta.Usuario = usuario.First();
-                cuenta.SaldoRestante = cuenta.SaldoInicial;
-                db.Cuentas.Add(cuenta);
+                objetivo.Usuario = usuario.First();
+                db.Objetivos.Add(objetivo);
                 db.SaveChanges();
-                return RedirectToAction("Index", "HojaRuta");
+                return RedirectToAction("Index","HojaRuta");
             }
 
-            return View(cuenta);
+            return View(objetivo);
         }
 
-        // GET: Cuenta/Edit/5
+        // GET: Objetivo/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cuenta cuenta = db.Cuentas.Find(id);
-            if (cuenta == null)
+            Objetivo objetivo = db.Objetivos.Find(id);
+            if (objetivo == null)
             {
                 return HttpNotFound();
             }
-            return View(cuenta);
+            return View(objetivo);
         }
 
-        // POST: Cuenta/Edit/5
+        // POST: Objetivo/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Nombre,SaldoInicial,SaldoRestante,TipoMoneda")] Cuenta cuenta)
+        public ActionResult Edit([Bind(Include = "Id,Descripcion,Fecha,Monto")] Objetivo objetivo)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(cuenta).State = EntityState.Modified;
+                db.Entry(objetivo).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index","HojaRuta");
+                return RedirectToAction("Index");
             }
-            return View(cuenta);
+            return View(objetivo);
         }
 
-        // GET: Cuenta/Delete/5
-        // GET: Cuenta/Delete/5
+        // GET: Objetivo/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cuenta cuenta = db.Cuentas.Find(id);
-            if (cuenta == null)
+            Objetivo objetivo = db.Objetivos.Find(id);
+            if (objetivo == null)
             {
                 return HttpNotFound();
             }
-
-            return View(cuenta);
+            return View(objetivo);
         }
 
-        // POST: Cuenta/Delete/5
+        // POST: Objetivo/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Cuenta cuenta = db.Cuentas.Find(id);
-
-            var gastos = from g in db.Gastos
-                         where g.cuenta.Id == id
-                         select g;
-
-            var ingresos = from i in db.Ingresos
-                         where i.cuenta.Id == id
-                         select i;
-
-            foreach (var gasto in gastos.ToList())
-            {
-                db.Gastos.Remove(gasto);
-                
-            }
-
-            foreach (var ingreso in ingresos.ToList())
-            {
-                db.Ingresos.Remove(ingreso);
-
-            }
-
-
-
-            db.Cuentas.Remove(cuenta);
+            Objetivo objetivo = db.Objetivos.Find(id);
+            db.Objetivos.Remove(objetivo);
             db.SaveChanges();
-            return RedirectToAction("Index","HojaRuta");
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

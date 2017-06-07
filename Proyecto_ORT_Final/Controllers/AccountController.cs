@@ -86,7 +86,7 @@ namespace Proyecto_ORT_Final.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    Session["user"] = this.getUsuarioLogueado(model.Email);
+                    Session["user"] = Sistema.instancia.getUsuarioLogueado(model.Email);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -99,15 +99,7 @@ namespace Proyecto_ORT_Final.Controllers
             }
         }
 
-        public  Usuario getUsuarioLogueado(string email)
-        {
-
-            var usr = from u in db.Usuarios
-                      where u.Mail == email
-                      select u;
-
-            return usr.First();
-        }
+       
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -178,13 +170,13 @@ namespace Proyecto_ORT_Final.Controllers
                     Usuario u = new Usuario()
                     {
                         Mail = model.Email
-
+                        
                     };
 
                     db.Usuarios.Add(u);
                     db.SaveChanges();
 
-                    Session["user"] = this.getUsuarioLogueado(model.Email);
+                    Session["user"] = Sistema.instancia.getUsuarioLogueado(model.Email);
                     // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
                     // Enviar correo electrónico con este vínculo
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

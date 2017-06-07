@@ -13,10 +13,12 @@ namespace Proyecto_ORT_Final.Controllers
     public class GastoController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
-
+        
+        
         // GET: Gasto
         public ActionResult Index()
         {
+            
             return View(db.Gastos.ToList());
         }
 
@@ -38,14 +40,14 @@ namespace Proyecto_ORT_Final.Controllers
         // GET: Gasto/Create
         public ActionResult Create()
         {
-            var userLogueado = (Usuario)Session["user"];
+            //var userLogueado = (Usuario)Session["user"];
 
-            var cuentas = from c in db.Cuentas
-                          where c.Usuario.Mail == userLogueado.Mail
-                          select c;
+            //var cuentas = from c in db.Cuentas
+            //              where c.Usuario.Mail == userLogueado.Mail
+            //              select c;
 
 
-            var list = new SelectList(cuentas, "Id", "Nombre");
+            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
             ViewData["cuentas"] = list;
             return View();
         }
@@ -58,22 +60,13 @@ namespace Proyecto_ORT_Final.Controllers
         public ActionResult Create([Bind(Include = "Id,fecha,descripcion,monto,pago")] Gasto gasto,int cuentas,HttpPostedFileBase imagen)
         {
             if (ModelState.IsValid)
+
+                if(gasto.monto <= Sistema.instancia.getCuenta(cuentas).SaldoRestante)
             {
-                
+               
                 var userLogueado = (Usuario)Session["user"];
-
-                var usuario = from u in db.Usuarios
-                              where u.Mail == userLogueado.Mail
-                              select u;
-
-                var cuenta = from c in db.Cuentas
-                             where c.Id == cuentas
-                             select c;
-
-                Cuenta Cuenta = cuenta.First();
-
-                gasto.cuenta = Cuenta;
-                gasto.Usuario = usuario.First();
+                    
+              
                 if (imagen != null)
                 {
                   gasto.Imagen = new byte[imagen.ContentLength];
@@ -81,13 +74,26 @@ namespace Proyecto_ORT_Final.Controllers
                 imagen.InputStream.Read(gasto.Imagen, 0, imagen.ContentLength);
 
                 }
-             
-                Cuenta.SaldoRestante = Cuenta.SaldoRestante - gasto.monto;
+                    var usuario = from u in db.Usuarios
+                                  where u.Id == userLogueado.Id
+                                  select u;
+
+                    var cuenta = from u in db.Cuentas
+                                  where u.Id == cuentas
+                                  select u;
+
+
+                gasto.cuenta = cuenta.First();
+                gasto.Usuario = usuario.First();
+                    cuenta.First().SaldoRestante = cuenta.First().SaldoRestante - gasto.monto;
                 db.Gastos.Add(gasto);
                 db.SaveChanges();
                 return RedirectToAction("Index","HojaRuta");
             }
 
+            ViewBag.ErrorSaldo = "Hay errores en los datos ingresados";
+            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
+            ViewData["cuentas"] = list;
             return View(gasto);
         }
 

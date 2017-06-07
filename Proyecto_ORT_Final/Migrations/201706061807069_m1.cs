@@ -3,7 +3,7 @@ namespace Proyecto_ORT_Final.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class _1 : DbMigration
+    public partial class m1 : DbMigration
     {
         public override void Up()
         {
@@ -28,8 +28,11 @@ namespace Proyecto_ORT_Final.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Mail = c.String(),
+                        HojaRuta_Id = c.Int(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.HojaDeRutas", t => t.HojaRuta_Id)
+                .Index(t => t.HojaRuta_Id);
             
             CreateTable(
                 "dbo.Gastoes",
@@ -62,6 +65,28 @@ namespace Proyecto_ORT_Final.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.HojaDeRutas",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Notificacions",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        HojaDeRuta_Id = c.Int(),
+                        Objetivo_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.HojaDeRutas", t => t.HojaDeRuta_Id)
+                .ForeignKey("dbo.Objetivoes", t => t.Objetivo_Id)
+                .Index(t => t.HojaDeRuta_Id)
+                .Index(t => t.Objetivo_Id);
+            
+            CreateTable(
                 "dbo.Ingresoes",
                 c => new
                     {
@@ -78,23 +103,45 @@ namespace Proyecto_ORT_Final.Migrations
                 .Index(t => t.cuenta_Id)
                 .Index(t => t.Usuario_Id);
             
+            CreateTable(
+                "dbo.Objetivoes",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Usuario_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Usuarios", t => t.Usuario_Id)
+                .Index(t => t.Usuario_Id);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Objetivoes", "Usuario_Id", "dbo.Usuarios");
+            DropForeignKey("dbo.Notificacions", "Objetivo_Id", "dbo.Objetivoes");
             DropForeignKey("dbo.Ingresoes", "Usuario_Id", "dbo.Usuarios");
             DropForeignKey("dbo.Ingresoes", "cuenta_Id", "dbo.Cuentas");
+            DropForeignKey("dbo.Usuarios", "HojaRuta_Id", "dbo.HojaDeRutas");
+            DropForeignKey("dbo.Notificacions", "HojaDeRuta_Id", "dbo.HojaDeRutas");
             DropForeignKey("dbo.Gastoes", "Usuario_Id", "dbo.Usuarios");
             DropForeignKey("dbo.Gastoes", "mapa_Id", "dbo.Mapas");
             DropForeignKey("dbo.Gastoes", "cuenta_Id", "dbo.Cuentas");
             DropForeignKey("dbo.Cuentas", "Usuario_Id", "dbo.Usuarios");
+            DropIndex("dbo.Objetivoes", new[] { "Usuario_Id" });
             DropIndex("dbo.Ingresoes", new[] { "Usuario_Id" });
             DropIndex("dbo.Ingresoes", new[] { "cuenta_Id" });
+            DropIndex("dbo.Notificacions", new[] { "Objetivo_Id" });
+            DropIndex("dbo.Notificacions", new[] { "HojaDeRuta_Id" });
             DropIndex("dbo.Gastoes", new[] { "Usuario_Id" });
             DropIndex("dbo.Gastoes", new[] { "mapa_Id" });
             DropIndex("dbo.Gastoes", new[] { "cuenta_Id" });
+            DropIndex("dbo.Usuarios", new[] { "HojaRuta_Id" });
             DropIndex("dbo.Cuentas", new[] { "Usuario_Id" });
+            DropTable("dbo.Objetivoes");
             DropTable("dbo.Ingresoes");
+            DropTable("dbo.Notificacions");
+            DropTable("dbo.HojaDeRutas");
             DropTable("dbo.Mapas");
             DropTable("dbo.Gastoes");
             DropTable("dbo.Usuarios");

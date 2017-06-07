@@ -20,9 +20,9 @@ namespace Proyecto_ORT_Final.Models
         public Decimal SaldoRestante { get; set; }
         [Display(Name = "Tipo de moneda")]
         public String TipoMoneda { get; set; }
+
         public Usuario Usuario { get; set; }
 
-        
         public Cuenta()
         {
            
