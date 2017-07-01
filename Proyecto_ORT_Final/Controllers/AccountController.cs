@@ -15,6 +15,7 @@ namespace Proyecto_ORT_Final.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private Sistema sistema = new Sistema();
         private ProyectoContext db = new ProyectoContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -86,7 +87,8 @@ namespace Proyecto_ORT_Final.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    Session["user"] = Sistema.instancia.getUsuarioLogueado(model.Email);
+                    Session["user"] = sistema.getUsuarioLogueado(model.Email);
+                    sistema.VerificarCuotasPagasObjetivos();
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -176,7 +178,7 @@ namespace Proyecto_ORT_Final.Controllers
                     db.Usuarios.Add(u);
                     db.SaveChanges();
 
-                    Session["user"] = Sistema.instancia.getUsuarioLogueado(model.Email);
+                    Session["user"] = sistema.getUsuarioLogueado(model.Email);
                     // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
                     // Enviar correo electrónico con este vínculo
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

@@ -16,11 +16,12 @@ namespace Proyecto_ORT_Final.Models
 
         public DbSet<Objetivo> Objetivos { get; set; }
 
+        public DbSet<Contact> Contactos { get; set; }
         public ProyectoContext()
             : base("con") {
 
         }
-      
 
+        public System.Data.Entity.DbSet<Proyecto_ORT_Final.Models.Factura> Facturas { get; set; }
     }
     }

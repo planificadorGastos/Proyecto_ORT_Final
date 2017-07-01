@@ -8,15 +8,15 @@ namespace Proyecto_ORT_Final.Models
     public class HojaDeRuta
     {
         public int Id { get; set; }
-        
-        
+
+        private Sistema sistema = new Sistema();
         private ProyectoContext db = new ProyectoContext();
         public List<Notificacion> Notificaciones { get; set; }
 
         public decimal getTotalPago()
     {
-            decimal retorno=0;
-            foreach(Gasto g in Sistema.instancia.getGastos())
+            decimal retorno =0;
+            foreach(Gasto g in sistema.getGastos())
             {
                 if (g.pago)
                 {
@@ -29,7 +29,7 @@ namespace Proyecto_ORT_Final.Models
         public decimal getTotalPendiente()
         {
             decimal retorno = 0;
-            foreach (Gasto g in Sistema.instancia.getGastos())
+            foreach (Gasto g in sistema.getGastos())
             {
                 if (!g.pago)
                 {
@@ -42,7 +42,7 @@ namespace Proyecto_ORT_Final.Models
         public List<Gasto>  getGastosPagos()
         {
             List<Gasto> retorno = new List<Gasto>();
-            foreach (Gasto g in Sistema.instancia.getGastos())
+            foreach (Gasto g in sistema.getGastos())
             {
                 if (g.pago)
                 {
@@ -55,7 +55,7 @@ namespace Proyecto_ORT_Final.Models
         public List<Gasto> getGastosNoPagos()
         {
             List<Gasto> retorno = new List<Gasto>();
-            foreach (Gasto g in Sistema.instancia.getGastos())
+            foreach (Gasto g in sistema.getGastos())
             {
                 if (!g.pago)
                 {
@@ -67,7 +67,7 @@ namespace Proyecto_ORT_Final.Models
 
         public void actualizarGasto(int id)
         {
-            foreach (Gasto g in Sistema.instancia.getGastos())
+            foreach (Gasto g in sistema.getGastos())
             {
                 if (!g.pago && g.Id== id)
                 {
@@ -82,13 +82,13 @@ namespace Proyecto_ORT_Final.Models
 
       public List<Objetivo> getObjetivos()
         {
-            return Sistema.instancia.getObjetivos();
+            return sistema.getObjetivos();
         }
 
 
         public List<Cuenta> getCuentas()
         {
-            return Sistema.instancia.getCuentas();
+            return sistema.getCuentas();
         }
 
 

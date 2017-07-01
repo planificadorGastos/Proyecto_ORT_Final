@@ -11,14 +11,15 @@ namespace Proyecto_ORT_Final.Controllers
     public class HojaRutaController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
-        Sistema instancia = Sistema.instancia;
-        
+        private Sistema sistema = new Sistema();
+
         // GET: HojaRuta
         public ActionResult Index()
         {
             if (Session["user"] != null)
             {
-            var HojaRuta = instancia.getHojaDeRuta();
+               
+            var HojaRuta = sistema.getHojaDeRuta();
             return View(HojaRuta);
             }
             else
@@ -28,7 +29,10 @@ namespace Proyecto_ORT_Final.Controllers
            
         }
 
-      
-   
+        public ActionResult qr()
+        {
+            return View();
+        }
+
     }
 }

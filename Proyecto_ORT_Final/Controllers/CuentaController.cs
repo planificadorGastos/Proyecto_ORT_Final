@@ -13,7 +13,7 @@ namespace Proyecto_ORT_Final.Controllers
     public class CuentaController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
-
+        private Sistema sistema = new Sistema();
         // GET: Cuenta mod
         public ActionResult Index()
         {
@@ -45,7 +45,7 @@ namespace Proyecto_ORT_Final.Controllers
             
             var userLogueado = (Usuario)Session["user"];
             
-            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
             ViewData["cuentas"] = list;
 
 

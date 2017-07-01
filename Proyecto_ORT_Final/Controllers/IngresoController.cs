@@ -13,7 +13,7 @@ namespace Proyecto_ORT_Final.Controllers
     public class IngresoController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
-
+        private Sistema sistema = new Sistema();
         // GET: Ingreso
         public ActionResult Index()
         {
@@ -42,7 +42,7 @@ namespace Proyecto_ORT_Final.Controllers
             var userLogueado = (Usuario)Session["user"];
 
            
-            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
             ViewData["cuentas"] = list;
 
             return View();
@@ -67,10 +67,12 @@ namespace Proyecto_ORT_Final.Controllers
                              where c.Id == cuentas
                              select c;
 
+               
                 Cuenta Cuenta = cuenta.First();
                 ingreso.cuenta = cuenta.First();
                 ingreso.cuenta.Id = cuentas;
                 ingreso.Usuario = usuario.First();
+                ingreso.Fecha = DateTime.Today;
                 Cuenta.SaldoRestante = Cuenta.SaldoRestante + ingreso.Monto;
                 db.Ingresos.Add(ingreso);
                 db.SaveChanges();

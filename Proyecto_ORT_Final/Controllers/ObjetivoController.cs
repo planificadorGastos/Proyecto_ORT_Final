@@ -13,11 +13,14 @@ namespace Proyecto_ORT_Final.Controllers
     public class ObjetivoController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
-
+        private Sistema sistema = new Sistema();
+        
+        
         // GET: Objetivo
         public ActionResult Index()
         {
             return View(db.Objetivos.ToList());
+
         }
 
         // GET: Objetivo/Details/5
@@ -38,6 +41,8 @@ namespace Proyecto_ORT_Final.Controllers
         // GET: Objetivo/Create
         public ActionResult Create()
         {
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
+            ViewData["cuentas"] = list;
             return View();
         }
 
@@ -46,7 +51,7 @@ namespace Proyecto_ORT_Final.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Descripcion,Fecha,Monto")] Objetivo objetivo)
+        public ActionResult Create([Bind(Include = "Id,Descripcion,Fecha,Monto,TipoMoneda,DebitoAutomatico")] Objetivo objetivo, int cuentas)
         {
             if (ModelState.IsValid)
             {
@@ -54,7 +59,15 @@ namespace Proyecto_ORT_Final.Controllers
                 var usuario = from u in db.Usuarios
                               where u.Mail == userLogueado.Mail
                               select u;
+
+                var cuenta = from u in db.Cuentas
+                             where u.Id == cuentas
+                             select u;
+                objetivo.Cuenta = cuenta.First();
                 objetivo.Usuario = usuario.First();
+                objetivo.MontoMensual= sistema.calcularPromedioMensual(objetivo.Monto, objetivo.Fecha);
+                objetivo.CuotasTotales = sistema.cantidadCuotas(objetivo.Fecha);
+                objetivo.CuotaActual = 0;
                 db.Objetivos.Add(objetivo);
                 db.SaveChanges();
                 return RedirectToAction("Index","HojaRuta");
@@ -89,7 +102,7 @@ namespace Proyecto_ORT_Final.Controllers
             {
                 db.Entry(objetivo).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "HojaRuta");
             }
             return View(objetivo);
         }
@@ -117,7 +130,7 @@ namespace Proyecto_ORT_Final.Controllers
             Objetivo objetivo = db.Objetivos.Find(id);
             db.Objetivos.Remove(objetivo);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "HojaRuta");
         }
 
         protected override void Dispose(bool disposing)
@@ -128,5 +141,59 @@ namespace Proyecto_ORT_Final.Controllers
             }
             base.Dispose(disposing);
         }
+
+       
+
+        public ActionResult Pagar(int? id)
+        {
+
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
+            ViewData["cuentas"] = list;
+            Objetivo objetivo = db.Objetivos.Find(id);
+            if (objetivo == null)
+            {
+                return HttpNotFound();
+            }
+            return View(objetivo);
+        }
+
+        // POST: Objetivo/Delete/5
+        [HttpPost, ActionName("Pagar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult PagarConfirmed(int id, int cuentas)
+        {
+            var cta = from u in db.Cuentas
+                        where u.Id == cuentas
+                          select u;
+            
+            Objetivo objetivo = db.Objetivos.Find(id);
+            if (sistema.verificarSaldo(cuentas, objetivo.MontoMensual))
+            {
+                cta.First().SaldoRestante = cta.First().SaldoRestante - objetivo.MontoMensual;
+                objetivo.CuotaActual = objetivo.CuotaActual + 1;
+                if (objetivo.CuotaActual >= objetivo.CuotasTotales)
+                {
+                    objetivo.Pago = true;
+                }
+                db.SaveChanges();
+                return RedirectToAction("Index","HojaRuta");
+            }
+
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
+            ViewData["cuentas"] = list;
+            ViewBag.ErrorSaldo = "No tiene saldo suficiente";
+                return View(objetivo);
+            
+        }
+
+
+
+
+
     }
 }

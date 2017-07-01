@@ -15,9 +15,9 @@ namespace Proyecto_ORT_Final.Models
         [Display(Name ="Nombre")]
         public String Nombre { get; set; }
         [Display(Name = "Saldo inicial")]
-        public Decimal SaldoInicial { get; set; }
+        public decimal SaldoInicial { get; set; }
         [Display(Name = "Saldo restante")]
-        public Decimal SaldoRestante { get; set; }
+        public decimal SaldoRestante { get; set; }
         [Display(Name = "Tipo de moneda")]
         public String TipoMoneda { get; set; }
 

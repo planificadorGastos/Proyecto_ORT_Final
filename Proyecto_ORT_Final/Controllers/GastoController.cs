@@ -13,8 +13,8 @@ namespace Proyecto_ORT_Final.Controllers
     public class GastoController : Controller
     {
         private ProyectoContext db = new ProyectoContext();
-        
-        
+        private Sistema sistema = new Sistema();
+
         // GET: Gasto
         public ActionResult Index()
         {
@@ -47,7 +47,7 @@ namespace Proyecto_ORT_Final.Controllers
             //              select c;
 
 
-            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
             ViewData["cuentas"] = list;
             return View();
         }
@@ -57,11 +57,11 @@ namespace Proyecto_ORT_Final.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,fecha,descripcion,monto,pago")] Gasto gasto,int cuentas,HttpPostedFileBase imagen)
+        public ActionResult Create([Bind(Include = "Id,fecha,descripcion,monto,pago,TipoMoneda")] Gasto gasto,int cuentas,HttpPostedFileBase imagen)
         {
             if (ModelState.IsValid)
 
-                if(gasto.monto <= Sistema.instancia.getCuenta(cuentas).SaldoRestante)
+                if(gasto.pago &&gasto.monto <= sistema.getCuenta(cuentas).SaldoRestante || !gasto.pago)
             {
                
                 var userLogueado = (Usuario)Session["user"];
@@ -81,18 +81,20 @@ namespace Proyecto_ORT_Final.Controllers
                     var cuenta = from u in db.Cuentas
                                   where u.Id == cuentas
                                   select u;
-
+                    if (gasto.pago)
+                    {
+                        cuenta.First().SaldoRestante = cuenta.First().SaldoRestante - gasto.monto;
+                    }
 
                 gasto.cuenta = cuenta.First();
                 gasto.Usuario = usuario.First();
-                    cuenta.First().SaldoRestante = cuenta.First().SaldoRestante - gasto.monto;
                 db.Gastos.Add(gasto);
                 db.SaveChanges();
                 return RedirectToAction("Index","HojaRuta");
             }
 
             ViewBag.ErrorSaldo = "Hay errores en los datos ingresados";
-            var list = new SelectList(Sistema.instancia.getCuentas(), "Id", "Nombre");
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
             ViewData["cuentas"] = list;
             return View(gasto);
         }
@@ -162,5 +164,60 @@ namespace Proyecto_ORT_Final.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+
+        public ActionResult Pagar(int? id)
+        {
+            
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
+            ViewData["cuentas"] = list;
+            Gasto objetivo = db.Gastos.Find(id);
+            if (objetivo == null)
+            {
+                return HttpNotFound();
+            }
+            return View(objetivo);
+        }
+
+        // POST: Objetivo/Delete/5
+        [HttpPost, ActionName("Pagar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult PagarConfirmed(int id, int cuentas)
+        {
+            
+            var cta = from u in db.Cuentas
+                      where u.Id == cuentas
+                      select u;
+
+            Gasto gasto = db.Gastos.Find(id);
+
+            double cotizacion = sistema.getCotizacion(gasto.TipoMoneda, cta.First().TipoMoneda);
+
+            if (sistema.verificarSaldo(cuentas, gasto.monto))
+            {
+                
+                cta.First().SaldoRestante = cta.First().SaldoRestante - (gasto.monto * (Decimal)cotizacion);
+                gasto.pago = true;
+                db.SaveChanges();
+                return RedirectToAction("Index", "HojaRuta");
+            }
+
+            var list = new SelectList(sistema.getCuentas(), "Id", "Nombre");
+            ViewData["cuentas"] = list;
+            ViewBag.ErrorSaldo = "No tiene saldo suficiente";
+            return View(gasto);
+
+        }
+
+
+
+
+
+
     }
 }

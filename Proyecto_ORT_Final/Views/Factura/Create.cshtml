@@ -1,0 +1,118 @@
+﻿@model Proyecto_ORT_Final.Models.Factura
+
+@{
+    ViewBag.Title = "Create";
+    
+}
+
+<h2>Escanear código QR factura</h2>
+
+@using (Html.BeginForm("Create", "Factura", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @*<div class="form-group">
+            <div class="col-md-10">
+                <hr>
+                <canvas></canvas>
+                <hr>
+                <label class="control-label col-md-2">Cámara: </label>
+                <select></select>
+                <hr>
+                <ul></ul>
+            </div>
+            </div>*@
+        <div class="form-group">
+            <label class="control-label col-md-2">Cámara: </label>
+               <div class="col-md-10">
+                   <select></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Imágen: </label>
+            <div class="col-md-10">
+                <canvas></canvas>
+            </div>
+        </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Qr, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Qr, new { htmlAttributes = new { id = "txtid", @class = "form-control", @readonly = true } })
+                    @Html.ValidationMessageFor(model => model.Qr, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Guardar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+}
+
+@section Scripts {
+
+<script src="~/Scripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/qrcodelib.js"></script>
+<script type="text/javascript" src="~/Scripts/webcodecamjs.js"></script>
+<script type="text/javascript">
+    var txt = "innerText" in HTMLElement.prototype ? "innerText" : "textContent";
+    var arg = {
+        resultFunction: function (result) {
+            var aChild = document.createElement('li');
+            aChild[txt] = result.format + ': ' + result.code;
+            document.querySelector('body').appendChild(aChild);
+            alert("Escaneo completo");
+            $("#txtid").val(result.code);
+
+
+        }
+    };
+    var decoder = new WebCodeCamJS("canvas").buildSelectMenu('select', 'environment|back').init(arg).play();
+    /*  Without visible select menu
+        var decoder = new WebCodeCamJS("canvas").buildSelectMenu(document.createElement('select'), 'environment|back').init(arg).play();
+    */
+    document.querySelector('select').addEventListener('change', function () {
+        decoder.stop().play();
+    });
+</script>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+    @Html.ActionLink("Volver", "Index","HojaRuta")
+</div>

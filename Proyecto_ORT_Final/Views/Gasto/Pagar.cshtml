@@ -1,0 +1,75 @@
+﻿@model Proyecto_ORT_Final.Models.Gasto
+
+@{
+    ViewBag.Title = "Pagar";
+}
+
+<h2>Pagar</h2>
+
+<h3>Desea pagar este gasto?</h3>
+<div>
+    <h4>Gasto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.monto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.monto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.pago)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.pago)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Imagen)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Imagen)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.cuenta, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("cuentas", ViewData["cuentas"] as SelectList)
+                @Html.ValidationMessageFor(model => model.cuenta, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-actions no-color">
+            <input type="submit" value="Pagar" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index","HojaRuta")
+        </div>
+        <p>
+            @ViewBag.ErrorSaldo
+        </p>
+    }
+</div>

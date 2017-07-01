@@ -3,12 +3,51 @@
     ViewBag.Title = "Index";
     decimal totalPago = Model.getTotalPago();
     decimal totalpendiente = Model.getTotalPendiente();
-
-  
+    
 }
 
 
 <h2>HOJA DE RUTA</h2>
+
+<h3>Mis Objetivos</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Objetivo</th>
+            <th>M.Mensual</th>
+            <th>Moneda</th>
+            <th>Cuotas Pagas</th>
+            <th>Cuotas Totales</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var c in Model.getObjetivos())
+        {
+            <tr class="info">
+                <td>@c.Descripcion</td>
+                <td>@c.MontoMensual</td>
+                <td>@c.TipoMoneda</td>
+                <td>@c.CuotaActual</td>
+                <td>@c.CuotasTotales</td>
+                <td>
+                    <span class="pull-right">
+                        
+                        <a href="@Url.Action("Delete", "Objetivo", new { id =c.Id })" class="btn btn-default">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                        <a href="@Url.Action("Pagar", "Objetivo", new { id =c.Id })" class="btn btn-default">
+                            <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+                        </a>
+                    </span>
+                </td>
+               
+            </tr>
+        }
+    </tbody>
+
+</table>
+
 <table class="table">
     <thead>
         <tr>
@@ -20,36 +59,7 @@
 
     <tbody>
       
-        
-        @foreach (var Hr in Model.getObjetivos())
-        {
 
-
-            <tr class="success">
-                <td>@Hr.Descripcion</td>
-                <td>@Hr.Monto</td>
-                <td>@Hr.Fecha</td>
-                <td>
-                    <span class="pull-right">
-                        <a href="@Url.Action("Edit", "Objetivo", new { id =Hr.Id })" class="btn btn-default">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        </a>
-                    </span>
-                </td>
-                <td>
-                    <a href="@Url.Action("Delete", "Objetivo", new { id =Hr.Id })" class="btn btn-default">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </a>
-                </td>
-
-            </tr>
-
-        }
-
-        
-        
-        
-        
           @foreach (var Hr in Model.getGastosPagos())
         {
            
@@ -63,13 +73,13 @@
                             <a href="@Url.Action("Edit", "Gasto", new { id =Hr.Id })" class="btn btn-default">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a>
+                            <a href="@Url.Action("Delete", "Gasto", new { id =Hr.Id })" class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
                         </span>
                     </td>
-                    <td>
-                        <a href="@Url.Action("Delete", "Gasto", new { id =Hr.Id })" class="btn btn-default">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </a>
-                    </td>
+                  
+
                 </tr>
 
             }
@@ -89,13 +99,15 @@
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 
                             </a>
+                            <a href="@Url.Action("Delete", "Gasto", new { id =Hr.Id })" class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
+                            <a href="@Url.Action("Pagar", "Gasto", new { id =Hr.Id })" class="btn btn-default">
+                                <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+                            </a>
                         </span>
                     </td>
-                    <td>
-                        <a href="@Url.Action("Delete", "Gasto", new { id =Hr.Id })" class="btn btn-default">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </a>
-                    </td>
+                   
                 </tr>
 
             }
@@ -150,13 +162,13 @@
                             <a href="@Url.Action("Edit", "Cuenta", new { id =c.Id })" class="btn btn-default">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a>
+
+                            <a href="@Url.Action("Delete", "Cuenta", new { id =c.Id })" class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
                         </span>
 </td>
-                <td>
-                    <a href="@Url.Action("Delete", "Cuenta", new { id =c.Id })" class="btn btn-default">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </a>
-                </td>
+              
 </tr>
         }
     </tbody>
